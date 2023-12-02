@@ -161,3 +161,17 @@ _ = tree.plot_tree(dtree,
                    class_names = ['AAA', 'BBB', 'CCC', 'DDD', 'EEE', 'FFF', 'GGG'],
                    max_depth= 7,
                    filled=True)
+
+# COMMAND ----------
+
+! pip install azure.storage.blob
+
+# COMMAND ----------
+
+from  azure.storage.blob  import  BlobServiceClient, BlobClient, ContainerClient
+import pickle
+model_bytes = pickle.dumps(dtree)
+blob_service_client = BlobServiceClient.from_connection_string("DefaultEndpointsProtocol=https;AccountName=busadm742;AccountKey=KEY;EndpointSuffix=core.windows.net")
+container_client = blob_service_client.get_container_client("models")
+blob_client = container_client.get_blob_client("model_rec.pkl")
+blob_client.upload_blob(model_bytes)
